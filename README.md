@@ -355,8 +355,8 @@ signalTraps.forEach(type => {
 
 **STEP 4**：到 Jaeger UI 上（http://localhost:16686/search）確認 Trace 路徑是否符合預期。
 
-![image](./img/jaeger1.png.png)
+![image](./img/jaeger1.png)
 下圖「report_producer」跟「report_consumer」之間的空白，就是 Kafka 的時間。
-![image](./img/jaeger2.png.png)
+![image](./img/jaeger2.png)
 
 範例到這裡告一段落，希望文中 Jaeger 與 Kafka 的組合應用，有幫讀者打開不一樣的思路。
