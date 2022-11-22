@@ -54,5 +54,5 @@ app.get("/api/report", async (req, res) => {
 });
 
 app.listen(parseInt(PORT, 10), () => {
-  console.log(`Service A listening for requests on http://localhost:${PORT}`);
+  console.log(`Service listening for requests on http://localhost:${PORT}`);
 });
