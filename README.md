@@ -65,7 +65,7 @@ span.end()
     - 如果報表順利產出，就將 Status 設定為「done」。
     > 上面對 Status 的任何變動，都會透過 Producer 將資訊傳遞到 reports/{id} 這個 Topic，讓前端監聽的的 Consumer 可以作出對應的變動。
 
-上面是比較完整的業務邏輯，建議讀者可以自行實做看看，下面筆者就單純放透過 Kafka 傳遞 carrier 資訊的部分：
+上面是比較完整的業務邏輯，建議讀者可以自行實做看看，下面筆者就單純示範透過 Kafka 傳遞 carrier 資訊的部分：
 #### ➤ 在 Producer 的 value 放上 carrier 的資訊（記得要轉為字串）
 ```js
 await producer.connect()
