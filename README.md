@@ -63,7 +63,7 @@ span.end()
     - 透過 id 從資料庫撈出對應的報表資訊，將 Status 設定為「processing」。
     - 呼叫相關服務產出報表，如果其中一個服務發生錯誤，就將 Status 設定為「fail」。
     - 如果報表順利產出，就將 Status 設定為「done」。
-    > 上面對 Status 的任何變動，都會透過 Producer 將資訊傳遞到 reports/{id} 這個 Topic，讓前端監聽的的 Consumer 可以作出對應的變動。
+    > 對 Status 的任何變動，都會透過 Producer 將資訊傳遞到 reports/{id} 這個 Topic，讓前端監聽的的 Consumer 可以作出對應的變動。
 
 上面是比較完整的業務邏輯，建議讀者可以自行實做看看，下面筆者就單純示範透過 Kafka 傳遞 carrier 資訊的部分：
 #### ➤ 在 Producer 的 value 放上 carrier 的資訊（記得要轉為字串）
@@ -112,7 +112,7 @@ npm install --save express
 npm install --save kafkajs
 ```
 
-**SETP 2**：新增「docker-compose.yml」貼上如下程式，並將其啟動。
+**SETP 2**：新增「docker-compose.yml」貼上如下程式，並將 docker 啟動。
 
 ```yml
 version: '2.0'
@@ -150,7 +150,7 @@ services:
       - ./deploy/kafkaCluster/kraft:/bitnami/kafka:rw
 ```
 
-接著輸入以下指令拉下＆啟動 Kafka & Jaeger 環境。
+接著輸入指令拉下並啟動 Kafka & Jaeger 環境。
 
 ```
 docker-compose up -d
@@ -249,7 +249,7 @@ app.listen(parseInt(PORT, 10), () => {
 });
 ```
 
-**STEP 5**：新增「consumer.js」貼上如下程式；專門監聽「report」這個 Topic，收到 message 後會開始做後續的處理（有刻意設計一個執行錯誤的結果）。
+**STEP 5**：新增「consumer.js」貼上如下程式；專門監聽「report」這個 Topic，在收到 message 後會開始後續的處理（有刻意設計一個執行錯誤的結果）。
 
 ```js
 const api = require('@opentelemetry/api');
@@ -347,16 +347,16 @@ signalTraps.forEach(type => {
 
 > 建議使用有分頁功能的終端機（如 iTerm2），這樣比較好觀察與操作。
 
-**STEP 1**：在專案根目錄下輸入 `node service.js` 啟動 Service。
-**STEP 2**：在終端機貼上指令 `curl http://localhost:8080/api/report` 來呼叫 API。
-**STEP 3**：在專案根目錄下輸入 `node consumer.js` 啟動監聽模式；這邊提醒一下，如果監聽不存在的 Topic 會報錯。
+**STEP 1**：在專案根目錄下輸入 `node service.js` 啟動 Service。  
+**STEP 2**：在終端機貼上指令 `curl http://localhost:8080/api/report` 來呼叫 API。  
+**STEP 3**：在專案根目錄下輸入 `node consumer.js` 啟動監聽模式；這邊提醒一下，如果監聽不存在的 Topic 會報錯。  
 
 ![image](./img/terminal.png)
 
 **STEP 4**：到 Jaeger UI 上（http://localhost:16686/search）確認 Trace 路徑是否符合預期。
 
 ![image](./img/jaeger1.png)
-下圖「report_producer」跟「report_consumer」之間的空白，就是 Kafka 的時間。
+下圖「report_producer」跟「report_consumer」之間的空白，就是資料在 Kafka 轉運站傳遞的時間。
 ![image](./img/jaeger2.png)
 
 範例到這裡告一段落，希望文中 Jaeger 與 Kafka 的組合應用，有幫讀者打開不一樣的思路。
